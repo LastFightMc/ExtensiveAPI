@@ -1,0 +1,11 @@
+/.idea/
+/target
+
+extensiveapi-core/target
+extensiveapi-core/dependency-reduced-pom.xml
+
+extensiveapi-databases/target
+extensiveapi-databases/dependency-reduced-pom.xml
+
+extensiveapi-minecraft/target
+extensiveapi-minecraft/dependency-reduced-pom.xml

@@ -1,0 +1,13 @@
+name: ExtensiveCore
+description: ExtensiveCore is a plugin that allows you to create easily plugins with a lot of features.
+main: fr.skoupi.extensiveapi.minecraft.ExtensiveCore
+author: SKAH#7513
+version: 2.0
+load: STARTUP
+softdepend:
+  - Jobs
+  - Lands
+  - NBTAPI
+  - Worldguard
+  - Vault
+  - Factions
