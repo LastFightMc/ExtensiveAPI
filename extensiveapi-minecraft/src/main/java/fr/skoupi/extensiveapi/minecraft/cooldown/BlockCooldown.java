@@ -14,6 +14,13 @@ import org.bukkit.block.Block;
 import org.bukkit.metadata.FixedMetadataValue;
 
 public class BlockCooldown implements Cooldown<Block> {
+
+    // It's adding a timer to the block.
+    @Override
+    public void addMsTimer(Block block, String cooldownIdentifier, long timeInMs) {
+        block.setMetadata(cooldownIdentifier, new FixedMetadataValue(ExtensiveCore.getInstance(), timeInMs + System.currentTimeMillis()));
+    }
+
     @Override
     // It's adding a timer to the block.
     public void addTimer(Block block, String cooldownIdentifier, long time) {

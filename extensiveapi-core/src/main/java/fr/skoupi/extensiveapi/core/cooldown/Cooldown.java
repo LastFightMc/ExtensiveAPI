@@ -15,7 +15,17 @@ public interface Cooldown<T> {
      *
      * @param object The object to which the cooldown will be attached
      * @param cooldownIdentifier This is the identifier for the cooldown.
-     * @param time The time in milliseconds that the cooldown will last.
+     * @param timeInMs The time in ms that the cooldown will last.
+     */
+    void addMsTimer(T object, String cooldownIdentifier, long timeInMs);
+
+
+    /**
+     * Adds a timer to the cooldown manager
+     *
+     * @param object The object to which the cooldown will be attached
+     * @param cooldownIdentifier This is the identifier for the cooldown.
+     * @param time The time in seconds that the cooldown will last.
      */
     void addTimer(T object, String cooldownIdentifier, long time);
 

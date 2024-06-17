@@ -15,6 +15,11 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 public class PlayerCooldown implements Cooldown<Player> {
     @Override
+    public void addMsTimer(Player player, String cooldownIdentifier, long timeInMs) {
+        player.setMetadata(cooldownIdentifier, new FixedMetadataValue(ExtensiveCore.getInstance(), timeInMs + System.currentTimeMillis()));
+    }
+
+    @Override
     // It's adding a timer to the player.
     public void addTimer(Player player, String cooldownIdentifier, long time) {
         player.setMetadata(cooldownIdentifier, new FixedMetadataValue(ExtensiveCore.getInstance(), (time * 1000) + System.currentTimeMillis()));
