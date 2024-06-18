@@ -40,6 +40,11 @@ public abstract class ChunkedTask {
     private boolean processing = false;
     private boolean firstLaunch = false;
 
+    @Getter
+    private static JavaPlugin plugin = ExtensiveCore.getInstance();
+
+    protected boolean logActions = true;
+
     /**
      * Create a new task that will process the given amount of times on each run
      * (see {@link #waitPeriodTicks}) and wait for 1 second between each time
@@ -60,6 +65,12 @@ public abstract class ChunkedTask {
     public ChunkedTask(int processAmount, int waitPeriodTicks) {
         this.processAmount = processAmount;
         this.waitPeriodTicks = waitPeriodTicks;
+    }
+
+    public ChunkedTask(int processAmount, int waitPeriodTicks, JavaPlugin pl) {
+        this.processAmount = processAmount;
+        this.waitPeriodTicks = waitPeriodTicks;
+        plugin = pl;
     }
 
     /**
@@ -101,8 +112,8 @@ public abstract class ChunkedTask {
                     this.onProcess(i);
 
                 } catch (Throwable t) {
-                    ExtensiveCore.getInstance().getLogger().severe(t.getMessage());
-                    ExtensiveCore.getInstance().getLogger().severe( "Error in " + this + " processing index " + processed);
+                    getPlugin().getLogger().severe(t.getMessage());
+                    getPlugin().getLogger().severe( "Error in " + this + " processing index " + processed);
                     this.processing = false;
                     this.firstLaunch = false;
 
@@ -111,8 +122,8 @@ public abstract class ChunkedTask {
                 }
             }
 
-            if (processed > 0 || !finished)
-                ExtensiveCore.getInstance().getLogger().info(this.getProcessMessage(now, processed));
+            if ((processed > 0 || !finished) && logActions)
+                getPlugin().getLogger().info(this.getProcessMessage(now, processed));
 
             if (!finished) {
                 this.currentIndex += this.processAmount;
@@ -133,7 +144,7 @@ public abstract class ChunkedTask {
      */
     public final void cancel() {
         if(!this.processing)
-            ExtensiveCore.getInstance().getLogger().severe("Chunked task is not running: " + this);
+            getPlugin().getLogger().severe("Chunked task is not running: " + this);
 
         this.processing = false;
     }
@@ -214,16 +225,15 @@ public abstract class ChunkedTask {
      */
     public static BukkitTask runLater(final int delayTicks, Runnable task) {
         final BukkitScheduler scheduler = Bukkit.getScheduler();
-        final JavaPlugin instance = ExtensiveCore.getInstance();
 
         try {
-            return runIfDisabled(task) ? null : delayTicks == 0 ? task instanceof BukkitRunnable ? ((BukkitRunnable) task).runTask(instance) : scheduler.runTask(instance, task) : task instanceof BukkitRunnable ? ((BukkitRunnable) task).runTaskLater(instance, delayTicks) : scheduler.runTaskLater(instance, task, delayTicks);
+            return runIfDisabled(task) ? null : delayTicks == 0 ? task instanceof BukkitRunnable ? ((BukkitRunnable) task).runTask(plugin) : scheduler.runTask(plugin, task) : task instanceof BukkitRunnable ? ((BukkitRunnable) task).runTaskLater(plugin, delayTicks) : scheduler.runTaskLater(plugin, task, delayTicks);
         } catch (final NoSuchMethodError err) {
 
             return runIfDisabled(task) ? null
                     : delayTicks == 0
-                    ? task instanceof BukkitRunnable ? ((BukkitRunnable) task).runTask(instance) : getTaskFromId(scheduler.scheduleSyncDelayedTask(instance, task))
-                    : task instanceof BukkitRunnable ? ((BukkitRunnable) task).runTaskLater(instance, delayTicks) : getTaskFromId(scheduler.scheduleSyncDelayedTask(instance, task, delayTicks));
+                    ? task instanceof BukkitRunnable ? ((BukkitRunnable) task).runTask(plugin) : getTaskFromId(scheduler.scheduleSyncDelayedTask(plugin, task))
+                    : task instanceof BukkitRunnable ? ((BukkitRunnable) task).runTaskLater(plugin, delayTicks) : getTaskFromId(scheduler.scheduleSyncDelayedTask(plugin, task, delayTicks));
         }
     }
 
@@ -240,16 +250,15 @@ public abstract class ChunkedTask {
      */
     public static BukkitTask runLaterAsync(final int delayTicks, Runnable task) {
         final BukkitScheduler scheduler = Bukkit.getScheduler();
-        final JavaPlugin instance = ExtensiveCore.getInstance();
 
         try {
-            return runIfDisabled(task) ? null : delayTicks == 0 ? task instanceof BukkitRunnable ? ((BukkitRunnable) task).runTaskAsynchronously(instance) : scheduler.runTaskAsynchronously(instance, task) : task instanceof BukkitRunnable ? ((BukkitRunnable) task).runTaskLaterAsynchronously(instance, delayTicks) : scheduler.runTaskLaterAsynchronously(instance, task, delayTicks);
+            return runIfDisabled(task) ? null : delayTicks == 0 ? task instanceof BukkitRunnable ? ((BukkitRunnable) task).runTaskAsynchronously(plugin) : scheduler.runTaskAsynchronously(plugin, task) : task instanceof BukkitRunnable ? ((BukkitRunnable) task).runTaskLaterAsynchronously(plugin, delayTicks) : scheduler.runTaskLaterAsynchronously(plugin, task, delayTicks);
 
         } catch (final NoSuchMethodError err) {
             return runIfDisabled(task) ? null
                     : delayTicks == 0
-                    ? getTaskFromId(scheduler.scheduleAsyncDelayedTask(instance, task))
-                    : getTaskFromId(scheduler.scheduleAsyncDelayedTask(instance, task, delayTicks));
+                    ? getTaskFromId(scheduler.scheduleAsyncDelayedTask(plugin, task))
+                    : getTaskFromId(scheduler.scheduleAsyncDelayedTask(plugin, task, delayTicks));
         }
     }
 
@@ -270,7 +279,7 @@ public abstract class ChunkedTask {
     // Otherwise we return false and the task will be run correctly in Bukkit scheduler
     // This is fail-safe to critical save-on-exit operations in case our plugin is improperly reloaded (PlugMan) or malfunctions
     private static boolean runIfDisabled(final Runnable run) {
-        if (!ExtensiveCore.getInstance().isEnabled()) {
+        if (!plugin.isEnabled()) {
             run.run();
 
             return true;
