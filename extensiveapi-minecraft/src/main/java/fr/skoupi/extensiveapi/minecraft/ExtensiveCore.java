@@ -58,9 +58,6 @@ public class ExtensiveCore extends JavaPlugin {
         saveConfig();
 
 
-        //Init thread pools
-        ExtensiveThreadPool.startingPools(getConfig().getConfigurationSection("threading"));
-
         //Download load and init Dependencies.
         File dependenciesFile = new File(getDataFolder(), "dependencies.json");
         File dependenciesFolder = new File(getDataFolder(), "SKAH-DEPENDENCIES");
@@ -99,6 +96,9 @@ public class ExtensiveCore extends JavaPlugin {
      */
     @Override
     public void onEnable() {
+        //Init thread pools
+        ExtensiveThreadPool.startingPools(getConfig().getConfigurationSection("config.threading"));
+
         //Init SmartInventory
         inventoryManager = new InventoryManager(this);
         inventoryManager.init();

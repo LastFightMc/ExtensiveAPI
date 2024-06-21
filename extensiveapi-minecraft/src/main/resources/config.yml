@@ -1,9 +1,9 @@
 config:
-  threads:
+  threading:
     pool:
-      minimum: 2
+      minimum: 10
       maximum: 100
-      keep_alive: 60
+      keep_alive: 30000
     queue:
       size: 1000
       # Available options: "FIFO", "UNSPECIFIED"
