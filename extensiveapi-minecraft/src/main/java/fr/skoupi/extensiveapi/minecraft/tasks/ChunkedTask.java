@@ -2,6 +2,7 @@ package fr.skoupi.extensiveapi.minecraft.tasks;
 
 
 import fr.skoupi.extensiveapi.minecraft.ExtensiveCore;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -31,6 +32,7 @@ public abstract class ChunkedTask {
      * The current index where we are processing at, right now
      */
     @Getter
+    @Setter(AccessLevel.PROTECTED)
     private int currentIndex = 0;
 
     /*

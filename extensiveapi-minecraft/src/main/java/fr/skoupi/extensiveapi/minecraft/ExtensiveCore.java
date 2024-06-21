@@ -54,6 +54,13 @@ public class ExtensiveCore extends JavaPlugin {
         instance = this;
         getDataFolder().mkdirs();
 
+        getConfig().options().copyDefaults(true);
+        saveConfig();
+
+
+        //Init thread pools
+        ExtensiveThreadPool.startingPools(getConfig().getConfigurationSection("threading"));
+
         //Download load and init Dependencies.
         File dependenciesFile = new File(getDataFolder(), "dependencies.json");
         File dependenciesFolder = new File(getDataFolder(), "SKAH-DEPENDENCIES");
@@ -103,7 +110,7 @@ public class ExtensiveCore extends JavaPlugin {
         if (useArmorEvent)
             Bukkit.getPluginManager().registerEvents(new ArmorListeners(), this);
 
-        ExtensiveThreadPool.RUNNABLE_EXECUTOR.scheduleAtFixedRate(new CommandLoader.unregisterCommandTask(), 5, 2, TimeUnit.SECONDS);
+        ExtensiveThreadPool.getRunnableExecutor().scheduleAtFixedRate(new CommandLoader.unregisterCommandTask(), 5, 2, TimeUnit.SECONDS);
     }
 
 
@@ -112,7 +119,7 @@ public class ExtensiveCore extends JavaPlugin {
      */
     @Override
     public void onDisable() {
-        ExtensiveThreadPool.shutdownNow();
+        ExtensiveThreadPool.shutdown();
     }
 
 

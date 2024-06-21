@@ -1,0 +1,11 @@
+config:
+  threads:
+    pool:
+      minimum: 2
+      maximum: 100
+      keep_alive: 60
+    queue:
+      size: 1000
+      # Available options: "FIFO", "UNSPECIFIED"
+      order: "FIFO"
+    name: "ExtensiveAPI-Thread-%d"
