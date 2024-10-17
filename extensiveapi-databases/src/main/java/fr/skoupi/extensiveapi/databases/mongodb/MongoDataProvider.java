@@ -142,8 +142,13 @@ public class MongoDataProvider {
      *                  the operation was acknowledged, and the Map<Integer, BsonValue> is the inserted IDs.
      */
     public void syncInsertMultipleDocuments(List<Document> documents, boolean ordered, BiConsumer<Boolean, Map<Integer, BsonValue>> consumer) {
-        InsertManyResult result = mongoCollection.insertMany(documents, new InsertManyOptions().ordered(ordered));
-        consumer.accept(result.wasAcknowledged(), result.getInsertedIds());
+        InsertManyResult result = this.mongoCollection.insertMany(documents, (new InsertManyOptions()).ordered(ordered));
+        try {
+            consumer.accept(result.wasAcknowledged(), result.getInsertedIds());
+        } catch (Exception e) {
+            System.err.println("Une erreur s'est produite lors de l'insertion de plusieurs documents : " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -165,6 +170,7 @@ public class MongoDataProvider {
             try {
                 syncInsertMultipleDocuments(documents, ordered, consumer);
             } catch (Exception e) {
+                System.err.println("Une erreur s'est produite lors de l'insertion de plusieurs documents : " + e.getMessage());
                 e.printStackTrace();
             }
         });

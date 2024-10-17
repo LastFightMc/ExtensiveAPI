@@ -7,7 +7,6 @@ package fr.skoupi.extensiveapi.minecraft;
  * For the project ExtensiveAPI
  */
 
-import co.aikar.commands.BaseCommand;
 import co.aikar.commands.PaperCommandManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -18,12 +17,12 @@ import fr.skoupi.extensiveapi.minecraft.commands.CommandLoader;
 
 import fr.skoupi.extensiveapi.minecraft.smartinventory.InventoryManager;
 import fr.skoupi.extensiveapi.minecraft.armors.ArmorListeners;
+import fr.skoupi.extensiveapi.minecraft.tasks.ChildCheckerTask;
 import fr.skoupi.extensiveapi.minecraft.utils.ExtensiveThreadPool;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -110,7 +109,7 @@ public class ExtensiveCore extends JavaPlugin {
         if (useArmorEvent)
             Bukkit.getPluginManager().registerEvents(new ArmorListeners(), this);
 
-        ExtensiveThreadPool.getRunnableExecutor().scheduleAtFixedRate(new CommandLoader.unregisterCommandTask(), 5, 2, TimeUnit.SECONDS);
+        ExtensiveThreadPool.getRunnableExecutor().scheduleAtFixedRate(new ChildCheckerTask(), 5, 2, TimeUnit.SECONDS);
     }
 
 
@@ -120,26 +119,5 @@ public class ExtensiveCore extends JavaPlugin {
     @Override
     public void onDisable() {
         ExtensiveThreadPool.shutdown();
-    }
-
-
-    public void registerCommand(BaseCommand baseCommand) {
-        commandLoader.getPaperCommandManager().registerCommand(baseCommand);
-    }
-
-    public void registerCommands(BaseCommand... baseCommands) {
-        for (BaseCommand baseCommand : baseCommands) {
-            registerCommand(baseCommand);
-        }
-    }
-
-    public void registerListener(JavaPlugin plugin, Listener listener) {
-        Bukkit.getPluginManager().registerEvents(listener, plugin);
-    }
-
-    public void registerListeners(JavaPlugin plugin, Listener... listeners) {
-        for (Listener listener : listeners) {
-            registerListener(plugin, listener);
-        }
     }
 }

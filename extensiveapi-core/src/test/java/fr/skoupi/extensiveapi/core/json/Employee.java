@@ -15,7 +15,4 @@ public class Employee {
     private int age;
 
     private String[] skills;
-
-
-
 }

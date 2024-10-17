@@ -9,6 +9,7 @@ package fr.skoupi.extensiveapi.minecraft.progressbar;
 
 import org.bukkit.ChatColor;
 
+@Deprecated(forRemoval = true)
 public class ProgressBarBuilder {
 
     private ProgressBarOrientation progressBarOrientation;

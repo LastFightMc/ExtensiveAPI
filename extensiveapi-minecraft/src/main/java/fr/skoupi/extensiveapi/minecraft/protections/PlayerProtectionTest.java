@@ -8,6 +8,7 @@ package fr.skoupi.extensiveapi.minecraft.protections;
  */
 
 import com.massivecraft.factions.listeners.FactionsBlockListener;
+import com.massivecraft.factions.perms.PermissibleActions;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import fr.skoupi.extensiveapi.minecraft.hooks.Hooks;
 import fr.skoupi.extensiveapi.minecraft.utils.MinecraftVersion;
@@ -20,6 +21,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 
+@Deprecated(forRemoval = true)
 public class PlayerProtectionTest {
 
     public final Hooks hooks;
@@ -44,9 +46,11 @@ public class PlayerProtectionTest {
         if (materialName.contains("SIGN") || materialName.contains("BANNER") || materialName.contains("WOOD") || materialName.contains("OAK") || materialName.contains("LOG") || materialName.contains("CHEST"))
             return false;
 
+        System.out.println(!MinecraftVersion.atLeast(MinecraftVersion.V.v1_13));
+
         // It's checking if the server is running on a version of Minecraft that is lower than 1.13.
         // AND It's checking if the block is a spawner
-        if ((!MinecraftVersion.atLeast(MinecraftVersion.V.v1_13)) && material == Material.SPAWNER) return false;
+        if ((MinecraftVersion.atLeast(MinecraftVersion.V.v1_13)) && material == Material.SPAWNER) return false;
 
             // It's checking if the server is running on a version of Minecraft that is at least 1.13.
             // AND It's checking if the block is a spawner
@@ -69,7 +73,7 @@ public class PlayerProtectionTest {
 
         //Check if the plugin is hooked to Factions
         if (hooks.isHooked("FACTIONS", false)) {
-            if (!FactionsBlockListener.playerCanBuildDestroyBlock(player, location, "build", true))
+            if (!FactionsBlockListener.playerCanBuildDestroyBlock(player, location, PermissibleActions.BUILD, true))
                 return false;
         }
 
@@ -107,7 +111,7 @@ public class PlayerProtectionTest {
         }
 
         if (hooks.isHooked("FACTIONS", false)) {
-            if (!FactionsBlockListener.playerCanBuildDestroyBlock(player, location, "destroy", true))
+            if (!FactionsBlockListener.playerCanBuildDestroyBlock(player, location, PermissibleActions.DESTROY, true))
                 return false;
         }
 

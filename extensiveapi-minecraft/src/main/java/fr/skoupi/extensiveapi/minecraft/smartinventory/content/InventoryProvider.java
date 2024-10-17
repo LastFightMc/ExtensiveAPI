@@ -7,10 +7,19 @@ import fr.skoupi.extensiveapi.minecraft.smartinventory.config.structs.Pagination
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
-
 public abstract class InventoryProvider {
 
+    /**
+     * Place dummy items in the inventory
+     * @param player The player
+     * @param contents The inventory contents
+     * @param guiSettings The gui settings
+     *
+     * @see DummyItem
+     * @see GuiSettings
+     * @see fr.skoupi.extensiveapi.minecraft.smartinventory.config.ConfigurationParser
+     *
+     */
     protected void placeDummyItems(Player player, InventoryContents contents, GuiSettings guiSettings) {
         for (DummyItem dummyItem : guiSettings.getDummyItems()) {
             for (int slot : dummyItem.getSlot()) {
@@ -27,9 +36,24 @@ public abstract class InventoryProvider {
         }
     }
 
-    public void init(Player player, InventoryContents contents) {}
-    public void update(Player player, InventoryContents contents) {}
+    public void init(Player player, InventoryContents contents) {
+    }
 
+
+    public void update(Player player, InventoryContents contents) {
+    }
+
+    /**
+     * Add pagination buttons to the inventory
+     *
+     * @param player The player
+     * @param contents The inventory contents
+     * @param settings The gui settings
+     *
+     * @see PaginationButton
+     * @see GuiSettings
+     * @see fr.skoupi.extensiveapi.minecraft.smartinventory.config.ConfigurationParser
+     */
     protected void addPaginationButtons(Player player, InventoryContents contents, GuiSettings settings) {
         for (PaginationButton paginationButton : settings.getPaginationButtons()) {
             SlotPos slotPos = new SlotPos(paginationButton.getSlot());

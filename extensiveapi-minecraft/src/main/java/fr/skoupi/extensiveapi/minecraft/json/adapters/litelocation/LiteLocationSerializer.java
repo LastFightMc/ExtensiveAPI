@@ -1,4 +1,4 @@
-package fr.skoupi.extensiveapi.minecraft.json.adapters.location;
+package fr.skoupi.extensiveapi.minecraft.json.adapters.litelocation;
 
 /*  LocationSerializer
  *  By: vSKAH <vskahhh@gmail.com>
@@ -8,21 +8,20 @@ package fr.skoupi.extensiveapi.minecraft.json.adapters.location;
  */
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import org.bukkit.Location;
-import org.bukkit.inventory.ItemStack;
+import fr.skoupi.extensiveapi.minecraft.liteobjects.LiteLocation;
 
 import java.io.IOException;
 
-public class LocationSerializer extends StdSerializer<Location> {
+public class LiteLocationSerializer extends StdSerializer<LiteLocation> {
 
-    public LocationSerializer() {
+
+    public LiteLocationSerializer() {
         this(null);
     }
 
-    public LocationSerializer(Class<Location> t) {
+    public LiteLocationSerializer(Class<LiteLocation> t) {
         super(t);
     }
 
@@ -38,16 +37,14 @@ public class LocationSerializer extends StdSerializer<Location> {
      * @param serializerProvider This is the serializer provider.
      */
     @Override
-    public void serialize(Location location, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+    public void serialize(LiteLocation location, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         // Writing the JSON object.
-        if(location.getWorld() == null) return;
+        if(location.getWorldName() == null) return;
         jsonGenerator.writeStartObject();
-        jsonGenerator.writeStringField("world", location.getWorld().getName());
+        jsonGenerator.writeStringField("world", location.getWorldName());
         jsonGenerator.writeNumberField("x", location.getX());
         jsonGenerator.writeNumberField("y", location.getY());
         jsonGenerator.writeNumberField("z", location.getZ());
-        jsonGenerator.writeNumberField("yaw", location.getYaw());
-        jsonGenerator.writeNumberField("pitch", location.getPitch());
         jsonGenerator.writeEndObject();
     }
 

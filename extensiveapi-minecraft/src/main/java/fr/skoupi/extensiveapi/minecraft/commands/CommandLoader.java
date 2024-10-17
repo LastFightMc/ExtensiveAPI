@@ -21,22 +21,43 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-public record CommandLoader(@Getter PaperCommandManager paperCommandManager) {
+@Getter
+public class CommandLoader {
 
+    private final PaperCommandManager paperCommandManager;
     private static final ConcurrentHashMap<String, List<BaseCommand>> commands = new ConcurrentHashMap<>();
 
     /**
-     * We enable the `help` command, we register a completion for the `players` argument, we register a completion for the
-     * `modules` argument, we register the `ModuleCommand` command, and we set the default locale to `Locale.FRANCE`
+     * Constructor
+     * Please don't instantiate this class directly, use the `ExtensiveCore.getCommandLoader()` method instead
+     * @param paperCommandManager
+     *
+     * @implNote We use the PaperCommandManager from Aikar's Command Framework
+     * @see <a href="https://github.com/AdvancedCustomFields/acf">Aikar's Command Framework</a>
+     */
+    public CommandLoader(PaperCommandManager paperCommandManager) {
+        this.paperCommandManager = paperCommandManager;
+    }
+
+    /**
+     * We enable the `help` command, we register a completion for the `players` argument,
+     * and we set the default locale to `Locale.FRANCE`
      */
     public void registerDefault() {
         paperCommandManager.enableUnstableAPI("help");
         paperCommandManager.getCommandCompletions().registerAsyncCompletion("players", c -> Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList()));
-        //paperCommandManager.getCommandCompletions().registerAsyncCompletion("modules", handler -> ModuleManager.getModules().keySet());
-        //paperCommandManager.registerCommand(new ModuleCommand());
         paperCommandManager.getLocales().setDefaultLocale(Locale.FRANCE);
     }
 
+
+    /**
+     * Register a command
+     *
+     * @param plugin  The instance of the plugin.
+     * @param command The command to register.
+     *
+     * @see BaseCommand for the `command` parameter.
+     */
     public void registerCommand(JavaPlugin plugin, BaseCommand command) {
 
         if (commands.containsKey(plugin.getName())) {
@@ -52,16 +73,33 @@ public record CommandLoader(@Getter PaperCommandManager paperCommandManager) {
         paperCommandManager.registerCommand(command);
     }
 
+    /**
+     * Register multiple commands at once.
+     *
+     * @param plugin   The instance of the plugin.
+     * @param commands The commands to register.
+     * @see <a href="https://www.geeksforgeeks.org/variable-arguments-varargs-in-java/">Variable Arguments (Varargs) in Java</a> for the `commands` parameter.
+     */
     public void registerCommands(JavaPlugin plugin, BaseCommand... commands) {
         for (BaseCommand command : commands) {
             registerCommand(plugin, command);
         }
     }
 
-    public void unregisterCommands(JavaPlugin plugin) {
+    /**
+     * Unregister all commands registered by a "children" plugin
+     *
+     * @param plugin The instance of the "children" plugin
+     */
+    public void unregisterCommands(Plugin plugin) {
         unregisterCommands(plugin.getName());
     }
 
+    /**
+     * Unregister all commands registered by a "children" plugin
+     *
+     * @param pluginName The name of the plugin
+     */
     public void unregisterCommands(String pluginName) {
         if (!commands.containsKey(pluginName)) return;
 
@@ -72,23 +110,15 @@ public record CommandLoader(@Getter PaperCommandManager paperCommandManager) {
         commands.remove(pluginName);
     }
 
-
-    public static class unregisterCommandTask extends TimerTask {
-
-        @Override
-        public void run() {
-            try {
-                PluginManager pm = Bukkit.getPluginManager();
-                for (Map.Entry<String, List<BaseCommand>> commandsEntry : commands.entrySet()) {
-                    Plugin plugin = pm.getPlugin(commandsEntry.getKey());
-                    if (plugin == null || !plugin.isEnabled())
-                        ExtensiveCore.getInstance().getCommandLoader().unregisterCommands(commandsEntry.getKey());
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
+    /**
+     * Get the registered commands
+     * Warning: This method returns a copy of the commands map and not the original map
+     * You can't modify the original map using this method
+     *
+     * @return HashMap<String, List < BaseCommand>> commands. String is the plugin name and List<BaseCommand> is the list of commands registered by the plugin
+     */
+    public HashMap<String, List<BaseCommand>> getCommands() {
+        return new HashMap<>(commands);
     }
 
 }

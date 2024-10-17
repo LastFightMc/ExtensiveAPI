@@ -14,6 +14,10 @@
 
     <repositories>
         <repository>
+            <id>mineacademy-repo</id>
+            <url>https://bitbucket.org/kangarko/libraries/raw/master</url>
+        </repository>
+        <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
@@ -172,10 +176,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.SaberLLC</groupId>
-            <artifactId>Saber-Factions</artifactId>
-            <version>2.4.0-RC</version>
-            <scope>provided</scope>
+            <groupId>org.mineacademy.plugin</groupId>
+            <artifactId>FactionsUUID</artifactId>
+            <version>1.6.9.5-U0.6.39-b341</version>
         </dependency>
 
         <dependency>

@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+@Deprecated(forRemoval = true)
 public class CraftingUtils {
 
 

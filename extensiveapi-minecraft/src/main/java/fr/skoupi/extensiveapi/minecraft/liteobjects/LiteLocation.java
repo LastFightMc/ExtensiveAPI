@@ -17,6 +17,13 @@ import org.bukkit.Location;
 @Data
 @EqualsAndHashCode
 @ToString
+
+/**
+ * LiteLocation
+ * LiteLocation is a class that represents a location in the world.
+ *
+ * But the difference is that it's lighter in memory than a Bukkit Location because she doesn't contains the whole shit.
+ */
 public class LiteLocation {
 
     private String worldName;
@@ -29,11 +36,24 @@ public class LiteLocation {
         return new Location(Bukkit.getWorld(getWorldName()), getX(), getY(), getZ());
     }
 
-    public LiteLocation fromBukkitLocation(Location location) {
-        this.setWorldName(location.getWorld().getName());
-        this.setX(location.getX());
-        this.setY(location.getY());
-        this.setZ(location.getZ());
-        return this;
+    public Location toBukkitLocation(float yaw, float pitch) {
+        return new Location(Bukkit.getWorld(getWorldName()), getX(), getY(), getZ(), yaw, pitch);
+    }
+
+    public static LiteLocation of(Location location) {
+        return new LiteLocation(location.getWorld().getName(), location.getX(), location.getY(), location.getZ());
+    }
+
+    public static LiteLocation of(String worldName, double x, double y, double z) {
+        return new LiteLocation(worldName, x, y, z);
+    }
+
+    public static LiteLocation of(String worldName, String x, String y, String z) {
+        return new LiteLocation(worldName, Double.parseDouble(x), Double.parseDouble(y), Double.parseDouble(z));
+    }
+
+    @Deprecated(forRemoval = true)
+    public static LiteLocation fromBukkitLocation(Location location) {
+        return new LiteLocation(location.getWorld().getName(), location.getX(), location.getY(), location.getZ());
     }
 }

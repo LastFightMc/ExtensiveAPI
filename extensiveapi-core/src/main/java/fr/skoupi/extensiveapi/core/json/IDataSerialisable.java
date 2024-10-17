@@ -41,7 +41,8 @@ public abstract class IDataSerialisable<T> {
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void save(File file, Object object, ObjectMapper objectMapper) {
-        file.getParentFile().mkdirs();
+        if (file.getParentFile() != null)
+            file.getParentFile().mkdirs();
 
         try {
             objectMapper.writeValue(file, object);
