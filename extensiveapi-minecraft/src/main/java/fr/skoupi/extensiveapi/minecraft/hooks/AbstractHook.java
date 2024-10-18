@@ -8,6 +8,7 @@ package fr.skoupi.extensiveapi.minecraft.hooks;
  */
 
 
+import fr.skoupi.extensiveapi.minecraft.ExtensiveCore;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -75,7 +76,8 @@ public abstract class AbstractHook<R> {
         Plugin plugin = Bukkit.getPluginManager().getPlugin(originalHookName);
         boolean classExists = classExists();
         boolean pluginEnabled = plugin != null && plugin.isEnabled();
-        Bukkit.getLogger().warning("HOOK: " + getHookName() + " class exists: " + classExists + " plugin enabled: " + pluginEnabled);
+        if (ExtensiveCore.DEBUG)
+            ExtensiveCore.getInstance().getLogger().warning("HOOK: " + getHookName() + " class exists: " + classExists + " plugin enabled: " + pluginEnabled);
         return classExists && pluginEnabled;
     }
 }

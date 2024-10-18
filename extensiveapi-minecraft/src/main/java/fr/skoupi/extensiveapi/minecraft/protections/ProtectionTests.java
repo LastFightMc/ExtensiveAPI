@@ -39,8 +39,6 @@ public class ProtectionTests {
         if (materialName.contains("SIGN") || materialName.contains("BANNER") || materialName.contains("WOOD") || materialName.contains("OAK") || materialName.contains("LOG") || materialName.contains("CHEST"))
             return false;
 
-        System.out.println(!MinecraftVersion.atLeast(MinecraftVersion.V.v1_13));
-
         // It's checking if the server is running on a version of Minecraft that is lower than 1.13.
         // AND It's checking if the block is a spawner
         if ((MinecraftVersion.atLeast(MinecraftVersion.V.v1_13)) && material == Material.SPAWNER) return false;

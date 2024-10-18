@@ -1,6 +1,6 @@
 package fr.skoupi.extensiveapi.core.json;
 
-/*  IDataSerialisable
+/*  AbstractDataSerializable
  *  By: vSKAH <vskahhh@gmail.com>
 
  * Created with IntelliJ IDEA
@@ -13,8 +13,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-@Deprecated(forRemoval = true)
-public abstract class IDataSerialisable<T> {
+public abstract class AbstractDataSerializable<T> {
+
+    private final Logger logger = Logger.getLogger("ExtensiveCore - JacksonAPI");
+    protected boolean debugEnabled = false;
+
 
     /**
      * It loads a file and returns the object of the class that was passed in
@@ -24,11 +27,16 @@ public abstract class IDataSerialisable<T> {
      * @return A MinecraftObjectMapper object
      */
     public T load(File file, Class<T> tClass, ObjectMapper objectMapper) {
+
         try {
             T type = objectMapper.readValue(file, tClass);
-            Logger.getLogger("ExtensiveCore - JacksonAPI").info("File ".concat(file.getAbsolutePath()).concat(" has been loaded"));
+
+            if (debugEnabled)
+                logger.info("File ".concat(file.getAbsolutePath()).concat(" has been loaded"));
             return type;
         } catch (IOException e) {
+            if (debugEnabled)
+                logger.warning("File ".concat(file.getAbsolutePath()).concat(" could not be loaded"));
             e.printStackTrace();
         }
         return null;
@@ -47,8 +55,11 @@ public abstract class IDataSerialisable<T> {
 
         try {
             objectMapper.writeValue(file, object);
-            Logger.getLogger("ExtensiveCore - JacksonAPI").info("File ".concat(file.getAbsolutePath()).concat(" has been saved"));
+            if (debugEnabled)
+                logger.info("File ".concat(file.getAbsolutePath()).concat(" has been saved"));
         } catch (IOException e) {
+            if (debugEnabled)
+                logger.warning("File ".concat(file.getAbsolutePath()).concat(" could not be saved"));
             e.printStackTrace();
         }
     }

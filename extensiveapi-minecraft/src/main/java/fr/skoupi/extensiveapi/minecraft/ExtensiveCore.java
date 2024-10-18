@@ -43,6 +43,7 @@ public class ExtensiveCore extends JavaPlugin {
     @Getter
     @Setter
     private boolean useArmorEvent = false;
+    public static boolean DEBUG = true;
 
     /**
      * > We create a new instance of the plugin, download and load dependencies,
