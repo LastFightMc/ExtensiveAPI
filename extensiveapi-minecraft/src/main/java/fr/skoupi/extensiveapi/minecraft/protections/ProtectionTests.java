@@ -8,7 +8,6 @@ package fr.skoupi.extensiveapi.minecraft.protections;
  */
 
 import com.massivecraft.factions.listeners.FactionsBlockListener;
-import com.massivecraft.factions.perms.PermissibleActions;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import fr.skoupi.extensiveapi.minecraft.hooks.Hooks;
 import fr.skoupi.extensiveapi.minecraft.utils.MinecraftVersion;
@@ -66,7 +65,7 @@ public class ProtectionTests {
 
         //Check if the plugin is hooked to Factions
         if (hooks.isHooked("FACTIONS", false)) {
-            if (!FactionsBlockListener.playerCanBuildDestroyBlock(player, location, PermissibleActions.BUILD, true))
+            if (!FactionsBlockListener.playerCanBuildDestroyBlock(player, location, "build", true))
                 return false;
         }
 
@@ -106,7 +105,7 @@ public class ProtectionTests {
         }
 
         if (hooks.isHooked("FACTIONS", false)) {
-            if (!FactionsBlockListener.playerCanBuildDestroyBlock(player, location, PermissibleActions.DESTROY, true))
+            if (!FactionsBlockListener.playerCanBuildDestroyBlock(player, location, "destroy", true))
                 return false;
         }
 
