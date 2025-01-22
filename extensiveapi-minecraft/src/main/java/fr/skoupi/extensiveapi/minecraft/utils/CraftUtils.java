@@ -7,6 +7,7 @@
 
 package fr.skoupi.extensiveapi.minecraft.utils;
 
+import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -19,6 +20,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+@UtilityClass
 public class CraftUtils {
 
     /*

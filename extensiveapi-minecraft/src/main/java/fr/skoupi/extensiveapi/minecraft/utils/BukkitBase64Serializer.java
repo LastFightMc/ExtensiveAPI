@@ -7,6 +7,7 @@ package fr.skoupi.extensiveapi.minecraft.utils;
  */
 
 import fr.skoupi.extensiveapi.minecraft.ExtensiveCore;
+import lombok.experimental.UtilityClass;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.NotNull;
@@ -15,12 +16,12 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
+@UtilityClass
 public class BukkitBase64Serializer {
 
     public static String writeNow(@NotNull Object... objects) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
              BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream)) {
-
             dataOutput.writeInt(objects.length);
 
             for (Object object : objects)
