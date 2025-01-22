@@ -8,6 +8,7 @@ package fr.skoupi.extensiveapi.minecraft.utils;
  */
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -16,30 +17,33 @@ import java.util.concurrent.*;
 @Getter
 public class ExtensiveThreadPool {
 
-    private static @Getter ExecutorService executorService;
-    private static @Getter ScheduledExecutorService runnableExecutor;
+    private ExecutorService executorService;
+    private ScheduledExecutorService runnableExecutor;
 
-    public static void startingPools(ConfigurationSection threadingSection) {
+    public void startingPools(ConfigurationSection threadingSection) {
+        final var threadPoolConfiguration = new ThreadPoolConfiguration(threadingSection);
+        startingPools(threadPoolConfiguration);
+    }
 
-        final ThreadPoolConfiguration conf = new ThreadPoolConfiguration(threadingSection);
-        ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat(conf.getThreadName()).build();
+    public void startingPools(ThreadPoolConfiguration threadPoolConfiguration) {
+        ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat(threadPoolConfiguration.getThreadName()).build();
 
-        ArrayBlockingQueue<Runnable> executorQueue = new ArrayBlockingQueue<>(conf.getQueueSize(), conf.isFair());
+        ArrayBlockingQueue<Runnable> executorQueue = new ArrayBlockingQueue<>(threadPoolConfiguration.getQueueSize(), threadPoolConfiguration.isFair());
 
-        if (conf.getMaximumPoolSize() == -1)
-            executorService = new ThreadPoolExecutor(conf.getMinimumPoolSize(), Integer.MAX_VALUE,
-                    conf.getKeepAliveTime(), TimeUnit.MILLISECONDS, executorQueue, threadFactory);
+        if (threadPoolConfiguration.getMaximumPoolSize() == -1)
+            executorService = new ThreadPoolExecutor(threadPoolConfiguration.getMinimumPoolSize(), Integer.MAX_VALUE,
+                    threadPoolConfiguration.getKeepAliveTime(), TimeUnit.MILLISECONDS, executorQueue, threadFactory);
         else
-            executorService = new ThreadPoolExecutor(conf.getMinimumPoolSize(), conf.getMaximumPoolSize(),
-                    conf.getKeepAliveTime(), TimeUnit.MILLISECONDS, executorQueue, threadFactory);
+            executorService = new ThreadPoolExecutor(threadPoolConfiguration.getMinimumPoolSize(), threadPoolConfiguration.getMaximumPoolSize(),
+                    threadPoolConfiguration.getKeepAliveTime(), TimeUnit.MILLISECONDS, executorQueue, threadFactory);
 
-        runnableExecutor = new ScheduledThreadPoolExecutor(conf.getMinimumPoolSize(), threadFactory);
+        runnableExecutor = new ScheduledThreadPoolExecutor(threadPoolConfiguration.getMinimumPoolSize(), threadFactory);
     }
 
     /**
      * Shutdown the executor services.
      */
-    public static void shutdown() {
+    public void shutdown() {
         if (executorService != null)
             executorService.shutdown();
         if (runnableExecutor != null)
@@ -49,7 +53,7 @@ public class ExtensiveThreadPool {
     /**
      * Shutdown the executor service and runnable executor service.
      */
-    public static void shutdownNow() {
+    public void shutdownNow() {
         if (executorService != null)
             executorService.shutdownNow();
         if (runnableExecutor != null)
@@ -57,7 +61,8 @@ public class ExtensiveThreadPool {
     }
 
     @Getter
-    private static class ThreadPoolConfiguration {
+    @AllArgsConstructor
+    public static class ThreadPoolConfiguration {
 
         private final int minimumPoolSize;
         private final int maximumPoolSize;

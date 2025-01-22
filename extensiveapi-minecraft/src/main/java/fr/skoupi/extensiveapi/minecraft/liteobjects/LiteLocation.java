@@ -11,6 +11,8 @@ package fr.skoupi.extensiveapi.minecraft.liteobjects;
 import lombok.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,28 +34,34 @@ public class LiteLocation {
     private double y;
     private double z;
 
-    public Location toBukkitLocation() {
-        return new Location(Bukkit.getWorld(getWorldName()), getX(), getY(), getZ());
+    public @Nullable Location toBukkitLocation() {
+        final var world = Bukkit.getWorld(worldName);
+        if (world == null)
+            return null;
+        return new Location(world, getX(), getY(), getZ());
     }
 
-    public Location toBukkitLocation(float yaw, float pitch) {
-        return new Location(Bukkit.getWorld(getWorldName()), getX(), getY(), getZ(), yaw, pitch);
+    public @Nullable Location toBukkitLocation(float yaw, float pitch) {
+        final var world = Bukkit.getWorld(worldName);
+        if (world == null)
+            return null;
+        return new Location(world, getX(), getY(), getZ(), yaw, pitch);
     }
 
-    public static LiteLocation of(Location location) {
+    public static @NotNull LiteLocation of(@NotNull Location location) {
         return new LiteLocation(location.getWorld().getName(), location.getX(), location.getY(), location.getZ());
     }
 
-    public static LiteLocation of(String worldName, double x, double y, double z) {
+    public static @NotNull LiteLocation of(@NotNull String worldName, double x, double y, double z) {
         return new LiteLocation(worldName, x, y, z);
     }
 
-    public static LiteLocation of(String worldName, String x, String y, String z) {
+    public static @NotNull LiteLocation of(@NotNull String worldName, @NotNull String x, @NotNull String y, @NotNull String z) {
         return new LiteLocation(worldName, Double.parseDouble(x), Double.parseDouble(y), Double.parseDouble(z));
     }
 
     @Deprecated(forRemoval = true)
-    public static LiteLocation fromBukkitLocation(Location location) {
+    public static @NotNull LiteLocation fromBukkitLocation(@NotNull Location location) {
         return new LiteLocation(location.getWorld().getName(), location.getX(), location.getY(), location.getZ());
     }
 }

@@ -11,8 +11,6 @@ import co.aikar.commands.BaseCommand;
 import fr.skoupi.extensiveapi.minecraft.ExtensiveCore;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -36,7 +34,7 @@ public class ChildCheckerTask extends TimerTask {
         HashMap<String, List<BaseCommand>> commands = ExtensiveCore.getInstance().getCommandLoader().getCommands();
         for (Map.Entry<String, List<BaseCommand>> commandsEntry : commands.entrySet()) {
             try {
-                Plugin plugin = pm.getPlugin(commandsEntry.getKey());
+                JavaPlugin plugin = (JavaPlugin) pm.getPlugin(commandsEntry.getKey());
                 if (plugin == null || !plugin.isEnabled()) {
                     unregisterMissingChildrenCommands(plugin);
                     unregisterMissingChildrenListeners(plugin);
@@ -46,11 +44,11 @@ public class ChildCheckerTask extends TimerTask {
 
     }
 
-    private void unregisterMissingChildrenCommands(Plugin plugin) {
+    private void unregisterMissingChildrenCommands(JavaPlugin plugin) {
         ExtensiveCore.getInstance().getCommandLoader().unregisterCommands(plugin);
     }
 
-    private void unregisterMissingChildrenListeners(Plugin plugin) {
+    private void unregisterMissingChildrenListeners(JavaPlugin plugin) {
         HandlerList.unregisterAll(plugin);
     }
 

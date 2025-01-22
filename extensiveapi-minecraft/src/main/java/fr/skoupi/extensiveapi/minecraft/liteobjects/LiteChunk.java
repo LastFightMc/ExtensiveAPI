@@ -8,10 +8,14 @@ package fr.skoupi.extensiveapi.minecraft.liteobjects;
  */
 
 
+import fr.skoupi.extensiveapi.minecraft.ExtensiveCore;
 import io.papermc.lib.PaperLib;
 import lombok.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -34,20 +38,26 @@ public class LiteChunk {
 
     private int chunkX, chunkZ;
 
-    public static LiteChunk of(Chunk chunk) {
+    public static @NotNull LiteChunk of(@NotNull Chunk chunk) {
         return new LiteChunk(chunk.getWorld().getName(), chunk.getX(), chunk.getZ());
     }
 
-    public static LiteChunk of(String worldName, int chunkX, int chunkZ) {
+    public static @NotNull LiteChunk of(@NotNull String worldName, int chunkX, int chunkZ) {
         return new LiteChunk(worldName, chunkX, chunkZ);
     }
 
-    public static LiteChunk of(String worldName, String chunkX, String chunkZ) {
+    public static @NotNull LiteChunk of(@NotNull String worldName, @NotNull String chunkX, @NotNull String chunkZ) {
         return new LiteChunk(worldName, Integer.parseInt(chunkX), Integer.parseInt(chunkZ));
     }
 
-    public CompletableFuture<Chunk> toBukkitChunk(boolean isUrgent) {
-        return PaperLib.getChunkAtAsync(Bukkit.getWorld(getWorldName()), getChunkX(), getChunkZ(), true, isUrgent);
+    public @NotNull CompletableFuture<@Nullable Chunk> toBukkitChunk(boolean isUrgent) {
+        final World world = Bukkit.getWorld(worldName);
+        if (world == null) {
+            final var logger = ExtensiveCore.getInstance().getLogger();
+            logger.severe("WARNING: toBukkitChunk, world is null");
+            return CompletableFuture.completedFuture(null);
+        }
+        return PaperLib.getChunkAtAsync(world, getChunkX(), getChunkZ(), true, isUrgent);
     }
 
 

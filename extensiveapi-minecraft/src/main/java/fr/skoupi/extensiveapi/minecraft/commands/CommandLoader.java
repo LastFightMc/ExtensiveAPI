@@ -91,7 +91,7 @@ public class CommandLoader {
      *
      * @param plugin The instance of the "children" plugin
      */
-    public void unregisterCommands(Plugin plugin) {
+    public void unregisterCommands(JavaPlugin plugin) {
         unregisterCommands(plugin.getName());
     }
 

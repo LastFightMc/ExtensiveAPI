@@ -6,8 +6,10 @@ package fr.skoupi.extensiveapi.minecraft.utils;
  * For the project minecraft-modules
  */
 
+import fr.skoupi.extensiveapi.minecraft.ExtensiveCore;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.ByteArrayInputStream;
@@ -15,7 +17,7 @@ import java.io.ByteArrayOutputStream;
 
 public class BukkitBase64Serializer {
 
-    public static String writeNow(Object... objects) {
+    public static String writeNow(@NotNull Object... objects) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
              BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream)) {
 
@@ -26,12 +28,14 @@ public class BukkitBase64Serializer {
 
             return Base64Coder.encodeLines(outputStream.toByteArray());
 
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            if (ExtensiveCore.DEBUG)
+                e.printStackTrace();
             return "";
         }
     }
 
-    public static Object[] read(String source) {
+    public static Object[] read(@NotNull String source) {
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(source));
              BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
 
@@ -41,7 +45,9 @@ public class BukkitBase64Serializer {
                 items[i] = dataInput.readObject();
 
             return items;
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            if (ExtensiveCore.DEBUG)
+                e.printStackTrace();
             return new Object[0];
         }
     }

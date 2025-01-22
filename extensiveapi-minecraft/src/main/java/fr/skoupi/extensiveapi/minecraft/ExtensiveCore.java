@@ -33,17 +33,18 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
-@Getter
 public class ExtensiveCore extends JavaPlugin {
 
-    private CommandLoader commandLoader;
     private static @Getter ExtensiveCore instance;
     private static @Getter InventoryManager inventoryManager;
 
-    @Getter
-    @Setter
-    private boolean useArmorEvent = false;
+
+    private @Getter @Setter boolean useArmorEvent = false;
+    private @Getter CommandLoader commandLoader;
+    private ExtensiveThreadPool extensiveThreadPool;
+
     public static boolean DEBUG = true;
+
 
     /**
      * > We create a new instance of the plugin, download and load dependencies,
@@ -68,7 +69,8 @@ public class ExtensiveCore extends JavaPlugin {
             if (!dependenciesFile.exists()) {
                 ConfigurationExporter.createConfig(dependenciesFile, getClass().getResourceAsStream("/dependencies.json"), false);
             }
-            Type listOfMyClassObject = new TypeToken<ArrayList<Dependency>>() {}.getType();
+            Type listOfMyClassObject = new TypeToken<ArrayList<Dependency>>() {
+            }.getType();
 
             Gson gson = new Gson();
             List<Dependency> outputList = gson.fromJson(FileUtils.readFileToString(dependenciesFile, "UTF-8"), listOfMyClassObject);
@@ -97,7 +99,8 @@ public class ExtensiveCore extends JavaPlugin {
     @Override
     public void onEnable() {
         //Init thread pools
-        ExtensiveThreadPool.startingPools(getConfig().getConfigurationSection("config.threading"));
+        extensiveThreadPool = new ExtensiveThreadPool();
+        extensiveThreadPool.startingPools(getConfig().getConfigurationSection("config.threading"));
 
         //Init SmartInventory
         inventoryManager = new InventoryManager(this);
@@ -110,7 +113,7 @@ public class ExtensiveCore extends JavaPlugin {
         if (useArmorEvent)
             Bukkit.getPluginManager().registerEvents(new ArmorListeners(), this);
 
-        ExtensiveThreadPool.getRunnableExecutor().scheduleAtFixedRate(new ChildCheckerTask(), 5, 2, TimeUnit.SECONDS);
+        extensiveThreadPool.getRunnableExecutor().scheduleAtFixedRate(new ChildCheckerTask(), 5, 2, TimeUnit.SECONDS);
     }
 
 
@@ -119,6 +122,6 @@ public class ExtensiveCore extends JavaPlugin {
      */
     @Override
     public void onDisable() {
-        ExtensiveThreadPool.shutdown();
+        extensiveThreadPool.shutdown();
     }
 }

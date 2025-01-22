@@ -18,38 +18,12 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 
 public class ProtectionTests {
 
-    /**
-     * If the block is not bedrock, liquid, a sign, a banner, or wood, then return the result of the testBreak function
-     *
-     * @param location The location of the block you want to break.
-     * @param player   The player who is breaking the block
-     * @return A boolean value.
-     */
-    public static boolean testBreakHammer(Location location, Player player) {
-        final Block block = location.getBlock();
-
-        final Material material = block.getType();
-        final String materialName = material.name();
-
-        if (materialName.contains("SIGN") || materialName.contains("BANNER") || materialName.contains("WOOD") || materialName.contains("OAK") || materialName.contains("LOG") || materialName.contains("CHEST"))
-            return false;
-
-        // It's checking if the server is running on a version of Minecraft that is lower than 1.13.
-        // AND It's checking if the block is a spawner
-        if ((MinecraftVersion.atLeast(MinecraftVersion.V.v1_13)) && material == Material.SPAWNER) return false;
-
-            // It's checking if the server is running on a version of Minecraft that is at least 1.13.
-            // AND It's checking if the block is a spawner
-        else if (material == Material.getMaterial("MOB_SPAWNER")) return false;
-
-        return testBreak(location, player);
-    }
-
-    public static boolean testPlace(@NonNull Location location, Material placedMaterial, Player player) {
+    public static boolean testPlace(@NotNull Location location, @NotNull Material placedMaterial, @NotNull Player player) {
 
         if (placedMaterial == Material.BEDROCK && !player.hasPermission("lastfight.placebedrock"))
             return false;
@@ -72,6 +46,31 @@ public class ProtectionTests {
         return placedMaterial != Material.AIR;
     }
 
+    /**
+     * If the block is not bedrock, liquid, a sign, a banner, or wood, then return the result of the testBreak function
+     *
+     * @param location The location of the block you want to break.
+     * @param player   The player who is breaking the block
+     * @return A boolean value.
+     */
+    public static boolean testBreakHammer(@NotNull Location location, @NotNull Player player) {
+        final var block = location.getBlock();
+        final var material = block.getType();
+
+        if (material.isBurnable() || material.name().contains("CHEST"))
+            return false;
+
+        // It's checking if the server is running on a version of Minecraft that is lower than 1.13.
+        // AND It's checking if the block is a spawner
+        if ((MinecraftVersion.atLeast(MinecraftVersion.V.v1_13)) && material == Material.SPAWNER) return false;
+
+            // It's checking if the server is running on a version of Minecraft that is at least 1.13.
+            // AND It's checking if the block is a spawner
+        else if (material == Material.getMaterial("MOB_SPAWNER")) return false;
+
+        return testBreak(location, player);
+    }
+
 
     /**
      * If the block is not air, liquid, or a chest, and the player is allowed to break it, return true
@@ -80,7 +79,7 @@ public class ProtectionTests {
      * @param player   The player who is breaking the block
      * @return A boolean value.
      */
-    public static boolean testBreak(@NonNull Location location, Player player) {
+    public static boolean testBreak(@NotNull Location location, @NotNull Player player) {
         final Block block = location.getBlock();
 
         if (block.getType() == Material.BEDROCK && !player.hasPermission("lastfight.breakbedrock"))
@@ -119,7 +118,7 @@ public class ProtectionTests {
      * @param player The player to test.
      * @return A boolean value, true = can be damaged.
      */
-    public static boolean testPvp(Player player) {
+    public static boolean testPvp(@NotNull Player player) {
         Hooks hooks = Hooks.getInstance();
 
         // It's checking if the plugin is hooked to WorldGuard.

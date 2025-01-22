@@ -14,6 +14,7 @@ import lombok.ToString;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.List;
@@ -31,7 +32,7 @@ public class Cuboid implements Serializable {
     }
 
     //Cuboid from raw values
-    private Cuboid(String string, int n, int n2, int n3, int n4, int n5, int n6) {
+    private Cuboid(@NotNull String string, int n, int n2, int n3, int n4, int n5, int n6) {
         this.worldName = string;
         this.x1 = Math.min(n, n4);
         this.x2 = Math.max(n, n4);
@@ -42,12 +43,12 @@ public class Cuboid implements Serializable {
     }
 
     //Cuboid from cuboid
-    public Cuboid(Cuboid cuboid) {
+    public Cuboid(@NotNull Cuboid cuboid) {
         this(cuboid.getWorldName(), cuboid.getX1(), cuboid.getY1(), cuboid.getZ1(), cuboid.getX2(), cuboid.getY2(), cuboid.getZ2());
     }
 
     // It's creating a cuboid from two locations.
-    public Cuboid(Location location1, Location location2) {
+    public Cuboid(@NotNull Location location1, @NotNull Location location2) {
         this.worldName = location1.getWorld().getName();
         this.x1 = Math.min(location1.getBlockX(), location2.getBlockX());
         this.y1 = Math.min(location1.getBlockY(), location2.getBlockY());
@@ -76,7 +77,7 @@ public class Cuboid implements Serializable {
      * @param location The location to check.
      * @return A boolean value.
      */
-    public boolean contains(Location location) {
+    public boolean contains(@NotNull Location location) {
         return this.worldName.equals(location.getWorld().getName()) && this.contains(location.getBlockX(), location.getBlockY(), location.getBlockZ());
     }
 
@@ -87,7 +88,7 @@ public class Cuboid implements Serializable {
      * @param player The player to check.
      * @return A boolean value.
      */
-    public boolean contains(Player player) {
+    public boolean contains(@NotNull Player player) {
         return this.contains(player.getLocation());
     }
 

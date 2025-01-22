@@ -1,111 +1,17 @@
 package fr.skoupi.extensiveapi.minecraft.smartinventory.config;
 
-import fr.skoupi.extensiveapi.minecraft.ExtensiveCore;
-import fr.skoupi.extensiveapi.minecraft.hooks.Hooks;
 import fr.skoupi.extensiveapi.minecraft.itemstack.ItemBuilder;
-import fr.skoupi.extensiveapi.minecraft.itemstack.SkullCreator;
 import fr.skoupi.extensiveapi.minecraft.smartinventory.config.structs.DummyItem;
 import fr.skoupi.extensiveapi.minecraft.smartinventory.config.structs.GuiSettings;
 import fr.skoupi.extensiveapi.minecraft.smartinventory.config.structs.PaginationButton;
-import me.arcaniax.hdb.api.HeadDatabaseAPI;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigurationParser {
 
-    private static boolean HDB_IS_LOADED = Hooks.getInstance().isHooked("HeadDatabase", true);
-
-    /**
-     * Parse an itemstack from a yaml configuration section
-     *
-     * @param parser The configuration section to parse
-     * @return The parsed itemstack
-     * @see ItemStack
-     * @see ConfigurationSection
-     */
-    public static ItemStack parseItem(ConfigurationSection parser) {
-        ItemBuilder builder = null;
-        if (parser == null)
-            return new ItemBuilder(Material.STONE).name("§cError in configuration section").build();
-
-        if (parser.contains("texture_base64")) {
-            String texture = parser.getString("texture_base64", "");
-            if (texture.isEmpty())
-                return new ItemBuilder(Material.STONE).name("§cError when loading head from texture").build();
-            builder = new ItemBuilder(SkullCreator.itemFromBase64(texture));
-        } else {
-            String material = parser.getString("material", "");
-            if (material.contains("hdb-") && HDB_IS_LOADED) {
-                HeadDatabaseAPI api = (HeadDatabaseAPI) Hooks.getInstance().getLoaded().get("HeadDatabase").getHook();
-                if (api == null)
-                    return new ItemBuilder(Material.STONE).name("§cError when loading the HDB API").build();
-                ItemStack stack = api.getItemHead(material.substring(4));
-                if (stack == null)
-                    return new ItemBuilder(Material.STONE).name("§cError when loading head from HDB").build();
-                builder = new ItemBuilder(stack);
-            } else {
-                Material mat = Material.getMaterial(material);
-                if (mat == null)
-                    return new ItemBuilder(Material.STONE).name("§cError when loading material").build();
-                builder = new ItemBuilder(mat);
-            }
-        }
-
-        if (parser.contains("name"))
-            builder.name(ChatColor.translateAlternateColorCodes('&', parser.getString("name", "LOADING_NAME_ERROR")));
-        if (parser.contains("lore") && parser.getStringList("lore") != null && !parser.getStringList("lore").isEmpty())
-            builder.lore(parser.getStringList("lore"));
-        if (parser.contains("amount"))
-            builder.amount(parser.getInt("amount"));
-        if (parser.contains("data"))
-            builder.data(parser.getInt("data"));
-        if (parser.contains("durability"))
-            builder.durability((short) parser.getInt("durability"));
-        if (parser.contains("hide_attributes"))
-            builder.flags(ItemFlag.HIDE_ATTRIBUTES);
-        if (parser.contains("hide_enchants"))
-            builder.flags(ItemFlag.HIDE_ENCHANTS);
-        if (parser.contains("enchants")) {
-            List<String> enchants = parser.getStringList("enchants");
-            if (enchants != null)
-                for (String enchantmentString : enchants) {
-                    String[] enchantmentArray = enchantmentString.split(":");
-                    if (enchantmentArray.length == 0)
-                        continue;
-                    Enchantment enchantment = findEnchantmentByName(enchantmentArray[0]);
-                    if (enchantment == null)
-                        continue;
-                    if (enchantmentArray.length > 1)
-                        builder.enchant(enchantment, Integer.parseInt(enchantmentArray[1]));
-                    else
-                        builder.enchant(enchantment);
-                }
-        }
-        return builder.build();
-    }
-
-    /**
-     * Find an enchantment by its name
-     *
-     * @param enchantmentName The name of the enchantment
-     * @return The enchantment if found, null otherwise
-     */
-    private static Enchantment findEnchantmentByName(String enchantmentName) {
-        try {
-            Enchantment enchant = Enchantment.getByName(enchantmentName);
-            return enchant;
-        } catch (Exception e) {
-            ExtensiveCore.getInstance().getLogger().warning("Error when loading enchantment " + enchantmentName);
-            return null;
-        }
-    }
 
     /**
      * Parse a dummy item from a configuration section
@@ -114,10 +20,11 @@ public class ConfigurationParser {
      * @param section The configuration section to parse
      * @return The parsed dummy item
      */
-    public static DummyItem parseDummyItem(ConfigurationSection section) {
+    public static @Nullable DummyItem parseDummyItem(@Nullable ConfigurationSection section) {
+        if (section == null) return null;
         DummyItem.DummyItemBuilder builder = DummyItem.builder();
         builder.setSlot(section.getIntegerList("slots").stream().mapToInt(Integer::intValue).toArray());
-        builder.setItem(parseItem(section.getConfigurationSection("item")));
+        builder.setItem(ItemBuilder.fromConfiguration(section.getConfigurationSection("item")));
         builder.setCommands(section.getStringList("commands"));
         return builder.build();
     }
@@ -129,10 +36,11 @@ public class ConfigurationParser {
      * @param section The configuration section to parse
      * @return The parsed pagination button
      */
-    public static PaginationButton parsePaginationButton(ConfigurationSection section) {
+    public static @Nullable PaginationButton parsePaginationButton(@Nullable ConfigurationSection section) {
+        if (section == null) return null;
         PaginationButton.PaginationButtonBuilder builder = PaginationButton.builder();
         builder.setSlot(section.getInt("slot"));
-        builder.setItem(parseItem(section.getConfigurationSection("item")));
+        builder.setItem(ItemBuilder.fromConfiguration(section.getConfigurationSection("item")));
         builder.setType(PaginationButton.PaginationButtonType.valueOf(section.getString("type", "NEXT_PAGE")));
         //builder.setAlwaysVisible(section.getBoolean("always_visible", true));
         return builder.build();
@@ -145,7 +53,8 @@ public class ConfigurationParser {
      * @param section The configuration section to parse
      * @return The parsed gui settings
      */
-    public static GuiSettings parseSettings(ConfigurationSection section) {
+    public static @Nullable GuiSettings parseSettings(@Nullable ConfigurationSection section) {
+        if (section == null) return null;
         GuiSettings.GuiSettingsBuilder builder = GuiSettings.builder();
         builder.setName(section.getString("title"));
         builder.setRows(section.getInt("rows"));
@@ -166,7 +75,7 @@ public class ConfigurationParser {
         ConfigurationSection iterator = section.getConfigurationSection("iterator");
         if (iterator != null) {
             builder.setIteratorSlots(iterator.getIntegerList("slots").stream().mapToInt(Integer::intValue).toArray());
-            builder.setIteratorItem(parseItem(iterator.getConfigurationSection("item")));
+            builder.setIteratorItem(ItemBuilder.fromConfiguration(iterator.getConfigurationSection("item")));
         }
         return builder.build();
     }
