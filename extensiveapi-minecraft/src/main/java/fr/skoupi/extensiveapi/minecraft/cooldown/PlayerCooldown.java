@@ -29,7 +29,7 @@ public class PlayerCooldown implements Cooldown<Player> {
     @Override
     // It's checking if the player has a timer.
     public boolean isInTimer(@NotNull Player player, @NotNull String cooldownIdentifier) {
-        return player.hasMetadata(cooldownIdentifier) && player.getMetadata(cooldownIdentifier).size() > 0 && player.getMetadata(cooldownIdentifier).get(0).asLong() > System.currentTimeMillis();
+        return player.hasMetadata(cooldownIdentifier) && !player.getMetadata(cooldownIdentifier).isEmpty() && player.getMetadata(cooldownIdentifier).get(0).asLong() > System.currentTimeMillis();
     }
 
     @Override

@@ -269,8 +269,7 @@ public class ItemBuilder {
          */
         private static @Nullable Enchantment findEnchantmentByName(@NotNull String enchantmentName) {
             try {
-                Enchantment enchant = Enchantment.getByName(enchantmentName);
-                return enchant;
+                return Enchantment.getByName(enchantmentName);
             } catch (Exception e) {
                 ExtensiveCore.getInstance().getLogger().warning("Error when loading enchantment " + enchantmentName);
                 return null;

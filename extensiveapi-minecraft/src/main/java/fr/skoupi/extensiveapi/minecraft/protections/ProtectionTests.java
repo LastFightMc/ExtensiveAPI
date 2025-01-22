@@ -11,7 +11,6 @@ import com.massivecraft.factions.listeners.FactionsBlockListener;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import fr.skoupi.extensiveapi.minecraft.hooks.Hooks;
 import fr.skoupi.extensiveapi.minecraft.utils.MinecraftVersion;
-import lombok.NonNull;
 import me.angeschossen.lands.api.integration.LandsIntegration;
 import me.angeschossen.lands.api.land.Land;
 import org.bukkit.Location;

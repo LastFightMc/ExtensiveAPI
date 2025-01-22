@@ -29,7 +29,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * LiteChunk
  * LiteChunk is a class that represents a chunk in the world.
- *
+ * </p>
  * But the difference is that it's lighter in memory than a Bukkit Chunk because she doesn't contains the whole shit.
  */
 public class LiteChunk {

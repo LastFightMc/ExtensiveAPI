@@ -31,7 +31,7 @@ public class BlockCooldown implements Cooldown<Block> {
     @Override
     // It's checking if the player has a timer.
     public boolean isInTimer(@NotNull Block block, @NotNull String cooldownIdentifier) {
-        return block.hasMetadata(cooldownIdentifier) && block.getMetadata(cooldownIdentifier).size() > 0 && block.getMetadata(cooldownIdentifier).get(0).asLong() > System.currentTimeMillis();
+        return block.hasMetadata(cooldownIdentifier) && !block.getMetadata(cooldownIdentifier).isEmpty() && block.getMetadata(cooldownIdentifier).get(0).asLong() > System.currentTimeMillis();
     }
 
     @Override

@@ -9,12 +9,9 @@ package fr.skoupi.extensiveapi.minecraft.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.PaperCommandManager;
-import fr.skoupi.extensiveapi.minecraft.ExtensiveCore;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;

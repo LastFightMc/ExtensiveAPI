@@ -22,7 +22,7 @@ import java.util.TimerTask;
 /**
  * This task is used to check if the child plugins are still enabled.
  * If the child plugin is disabled, we unregister all commands and listeners.
- *
+ * </p>
  * What is a child plugin?
  * A child plugin is a plugin that uses the ExtensiveAPI as a dependency.
  */
