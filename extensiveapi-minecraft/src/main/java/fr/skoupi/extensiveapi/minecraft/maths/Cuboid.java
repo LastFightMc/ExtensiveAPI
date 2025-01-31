@@ -13,8 +13,10 @@ import lombok.Getter;
 import lombok.ToString;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.List;
@@ -27,6 +29,8 @@ public class Cuboid implements Serializable {
 
     private int x1, y1, z1;
     private int x2, y2, z2;
+
+    private World world;
 
     public Cuboid() {
     }
@@ -92,6 +96,12 @@ public class Cuboid implements Serializable {
         return this.contains(player.getLocation());
     }
 
+    public @Nullable World getWorld() {
+        if (world == null)
+            world = Bukkit.getWorld(worldName);
+        return world;
+    }
+
     /**
      * Returns a list of all players inside the region.
      *
@@ -100,10 +110,19 @@ public class Cuboid implements Serializable {
     @JsonIgnore
     public List<Player> getPlayersInside() {
         List<Player> list = Lists.newArrayList();
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+        if (getWorld() == null)
+            return list;
+        for (Player onlinePlayer : getWorld().getPlayers()) {
             if (this.contains(onlinePlayer)) list.add(onlinePlayer);
         }
         return list;
+    }
+
+    @JsonIgnore
+    public Location calculateCenter() {
+        Location loc1 = new Location(getWorld(), getX1(), getY1(), getZ1());
+        Location loc2 = new Location(getWorld(), getX2(), getY2(), getZ2());
+        return loc1.clone().add(loc2.clone()).multiply(0.5D);
     }
 
 
