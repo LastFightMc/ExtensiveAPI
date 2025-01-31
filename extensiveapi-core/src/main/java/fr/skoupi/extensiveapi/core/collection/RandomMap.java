@@ -16,7 +16,7 @@ import java.util.TreeMap;
 @Getter
 public class RandomMap<E> {
 
-    private final NavigableMap<Double, Object> map = new TreeMap<>();
+    private final NavigableMap<Double, E> map = new TreeMap<>();
     private final Random random;
     private double total = 0;
 
@@ -34,7 +34,7 @@ public class RandomMap<E> {
      * @param object The object to add
      * @return RandomMap instance
      */
-    public RandomMap<E> add(double weight, Object object) {
+    public RandomMap<E> add(double weight, E object) {
         if (weight <= 0)
             return this;
         total += weight;
@@ -49,7 +49,7 @@ public class RandomMap<E> {
      *
      * @exemple YourTemplateType result = (YourTemplateType) YourRandomMapInstance.next();
      */
-    public Object next() {
+    public E next() {
         double value = random.nextDouble() * total;
         return map.higherEntry(value).getValue();
     }
