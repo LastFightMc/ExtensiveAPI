@@ -11,6 +11,7 @@ package fr.skoupi.extensiveapi.minecraft.liteobjects;
 import lombok.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,6 +47,21 @@ public class LiteLocation {
         if (world == null)
             return null;
         return new Location(world, getX(), getY(), getZ(), yaw, pitch);
+    }
+
+    public static @NotNull LiteLocation of(@NotNull ConfigurationSection section) throws IllegalArgumentException {
+        final String world = section.getString("world");
+        if (world == null)
+            throw new IllegalArgumentException("The world configuration is missing");
+
+        if (!section.contains("x") || !section.contains("y") || !section.contains("z"))
+            throw new IllegalArgumentException("The x and y or z configuration is missing");
+
+        final int x = section.getInt("x");
+        final int y = section.getInt("y");
+        final int z = section.getInt("z");
+
+        return LiteLocation.of(world, x, y, z);
     }
 
     public static @NotNull LiteLocation of(@NotNull Location location) {
