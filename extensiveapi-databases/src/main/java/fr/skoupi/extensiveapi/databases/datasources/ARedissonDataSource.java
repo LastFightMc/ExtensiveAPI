@@ -1,4 +1,4 @@
-package fr.skoupi.extensiveapi.databases.redis;
+package fr.skoupi.extensiveapi.databases.datasources;
 
 /*  RedisDataSource
  *  By: vSKAH <vskahhh@gmail.com>
@@ -9,7 +9,6 @@ package fr.skoupi.extensiveapi.databases.redis;
 
 import fr.skoupi.extensiveapi.databases.IDataSource;
 import lombok.Getter;
-import lombok.Setter;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.codec.JsonJacksonCodec;
@@ -18,24 +17,20 @@ import org.redisson.config.Config;
 import java.io.File;
 import java.io.IOException;
 
-public class RedisDataSource implements IDataSource {
+public abstract class ARedissonDataSource implements IDataSource {
 
-    @Getter
-    private static RedisDataSource instance;
-    private final File redissonConfigurationFile;
-    @Getter
-    @Setter
-    protected RedissonClient redissonClient;
+    private final File configurationFile;
     private final boolean setCodec;
 
-    public RedisDataSource(File redissonConfigurationFile, boolean setCodec) {
-        instance = this;
-        this.redissonConfigurationFile = redissonConfigurationFile;
+    private @Getter RedissonClient redissonClient;
+
+    public ARedissonDataSource(File configurationFile, boolean setCodec) {
+        this.configurationFile = configurationFile;
         this.setCodec = setCodec;
     }
 
-    public RedisDataSource(File redissonConfigurationFile) {
-        this(redissonConfigurationFile, false);
+    public ARedissonDataSource(File configurationFile) {
+        this(configurationFile, false);
     }
 
     /**
@@ -44,7 +39,7 @@ public class RedisDataSource implements IDataSource {
      */
     @Override
     public void openDataSource() throws IOException {
-        final Config config = Config.fromYAML(redissonConfigurationFile);
+        final Config config = Config.fromYAML(configurationFile);
         if (setCodec) config.setCodec(new JsonJacksonCodec());
         redissonClient = Redisson.create(config);
     }

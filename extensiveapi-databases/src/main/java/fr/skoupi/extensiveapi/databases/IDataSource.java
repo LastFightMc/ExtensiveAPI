@@ -7,23 +7,21 @@ package fr.skoupi.extensiveapi.databases;
  */
 
 
-import java.io.IOException;
-
 public interface IDataSource {
-	/**
-	 * This function opens a data source and throws an IOException if it fails.
-	 */
-	void openDataSource () throws IOException;
+    /**
+     * This function opens a data source and throws an Exception if it fails.
+     */
+    void openDataSource() throws Exception;
 
-	/**
-	 * > Returns true if the data source is open, false otherwise
-	 *
-	 * @return A boolean value.
-	 */
-	boolean dataSourceIsOpen ();
+    /**
+     * > Returns true if the data source is open, false otherwise
+     *
+     * @return A boolean value.
+     */
+    boolean dataSourceIsOpen() throws Exception;
 
-	/**
-	 * Closes the data source
-	 */
-	void closeDataSource ();
+    /**
+     * Closes the data source
+     */
+    void closeDataSource() throws Exception;
 }

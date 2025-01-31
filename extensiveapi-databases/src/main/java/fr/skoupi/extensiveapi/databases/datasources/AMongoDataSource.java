@@ -1,4 +1,4 @@
-package fr.skoupi.extensiveapi.databases.mongodb;
+package fr.skoupi.extensiveapi.databases.datasources;
 
 /*  MongoDataSource
  *  By: vSKAH <vskahhh@gmail.com>
@@ -16,17 +16,13 @@ import lombok.Getter;
 import org.bson.UuidRepresentation;
 
 
-@Getter
-public class MongoDataSource implements IDataSource {
+public class AMongoDataSource implements IDataSource {
 
-    @Getter
-    private static MongoDataSource instance;
-    private MongoClient mongoClient;
+    private @Getter MongoClient mongoClient;
     private final String mongoHostname;
 
 
-    public MongoDataSource(String mongoHostname) {
-        instance = this;
+    public AMongoDataSource(String mongoHostname) {
         this.mongoHostname = mongoHostname;
     }
 

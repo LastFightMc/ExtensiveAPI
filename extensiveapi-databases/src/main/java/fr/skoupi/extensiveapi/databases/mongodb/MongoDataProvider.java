@@ -12,6 +12,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.InsertManyOptions;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.InsertManyResult;
+import fr.skoupi.extensiveapi.databases.datasources.AMongoDataSource;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.BsonValue;
@@ -35,13 +36,13 @@ public class MongoDataProvider {
     private MongoCollection<Document> mongoCollection;
 
     // It's a constructor.
-    public MongoDataProvider(MongoDataSource dataSource, String databaseName, String collectionName) {
+    public MongoDataProvider(AMongoDataSource dataSource, String databaseName, String collectionName) {
         this(dataSource, databaseName, collectionName, null);
     }
 
     //It's another constructor, but with codec registry.
     //Codec registry is used to serialize and deserialize custom plain old java objects.
-    public MongoDataProvider(MongoDataSource dataSource, String databaseName, String collectionName, CodecRegistry codecRegistry) {
+    public MongoDataProvider(AMongoDataSource dataSource, String databaseName, String collectionName, CodecRegistry codecRegistry) {
         this.databaseName = databaseName;
         this.collectionName = collectionName;
         if (codecRegistry != null)
