@@ -19,7 +19,7 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>5.0.1</version>
+            <version>6.2.1</version>
             <scope>provided</scope>
         </dependency>
 
@@ -31,26 +31,18 @@
         </dependency>
 
         <dependency>
-            <groupId>org.dizitart</groupId>
-            <artifactId>nitrite</artifactId>
-            <version>3.4.4</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson</artifactId>
-            <version>3.23.0</version>
+            <version>3.44.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.rabbitmq</groupId>
             <artifactId>amqp-client</artifactId>
-            <version>5.18.0</version>
+            <version>5.24.0</version>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
 
     <build>

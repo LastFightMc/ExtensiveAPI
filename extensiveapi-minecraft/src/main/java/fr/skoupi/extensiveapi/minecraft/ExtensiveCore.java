@@ -13,6 +13,7 @@ import com.google.gson.reflect.TypeToken;
 import fr.skoupi.extensiveapi.core.configuration.ConfigurationExporter;
 import fr.skoupi.extensiveapi.core.mavenresolver.Dependency;
 import fr.skoupi.extensiveapi.core.mavenresolver.DependencyManager;
+import fr.skoupi.extensiveapi.minecraft.annotations.AsyncOnly;
 import fr.skoupi.extensiveapi.minecraft.commands.CommandLoader;
 
 import fr.skoupi.extensiveapi.minecraft.smartinventory.InventoryManager;
@@ -114,6 +115,13 @@ public class ExtensiveCore extends JavaPlugin {
             Bukkit.getPluginManager().registerEvents(new ArmorListeners(), this);
 
         extensiveThreadPool.getRunnableExecutor().scheduleAtFixedRate(new ChildCheckerTask(), 5, 2, TimeUnit.SECONDS);
+    }
+
+
+    @AsyncOnly
+    public void test()
+    {
+        String test = "new test";
     }
 
 

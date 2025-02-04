@@ -64,6 +64,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Builded from buildtools -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>io.papermc</groupId>
             <artifactId>paperlib</artifactId>
@@ -72,23 +80,16 @@
         </dependency>
 
         <dependency>
-            <groupId>org.spigotmc.</groupId>
-            <artifactId>spigot</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
-            <version>1.16-R0.4</version>
+            <version>1.20-R0.2</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.mojang</groupId>
             <artifactId>authlib</artifactId>
-            <version>3.11.49</version>
+            <version>3.11.50</version>
             <scope>provided</scope>
         </dependency>
         <!-- End Hard dependencies -->
@@ -184,24 +185,6 @@
             <version>4.0-14561fba16-1</version>
             <scope>provided</scope>
         </dependency>
-
-
-        <!-- Testing dependecie for Minecraft -->
-        <dependency>
-            <groupId>com.github.seeseemelk</groupId>
-            <artifactId>MockBukkit-v1.18</artifactId>
-            <version>2.0.0</version>
-            <scope>test</scope>
-
-            <exclusions>
-                <exclusion>
-                    <!-- We use javax.annotation instead. Excluding this -->
-                    <!-- prevents us from using inconsistent annotations -->
-                    <groupId>org.jetbrains</groupId>
-                    <artifactId>annotations</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
     </dependencies>
 
     <properties>
@@ -230,13 +213,14 @@
                         <relocation>
                             <pattern>co.aikar.commands</pattern>
                             <shadedPattern>fr.skoupi.extensiveapi.minecraft.acf.commands
-                            </shadedPattern> <!-- Replace this -->
+                            </shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>co.aikar.locales</pattern>
                             <shadedPattern>fr.skoupi.extensiveapi.minecraft.acf.locales
-                            </shadedPattern> <!-- Replace this -->
+                            </shadedPattern>
                         </relocation>
+
                     </relocations>
                 </configuration>
                 <executions>
