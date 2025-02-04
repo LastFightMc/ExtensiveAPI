@@ -118,13 +118,6 @@ public class ExtensiveCore extends JavaPlugin {
     }
 
 
-    @AsyncOnly
-    public void test()
-    {
-        String test = "new test";
-    }
-
-
     /**
      * When the plugin is disabled, unregister all modules and shutdown the scheduler.
      */
