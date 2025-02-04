@@ -7,6 +7,7 @@
 
 package fr.skoupi.extensiveapi.minecraft.economy;
 
+import fr.skoupi.extensiveapi.minecraft.annotations.AsyncOnly;
 import fr.skoupi.extensiveapi.minecraft.economy.interfaces.IEconomyType;
 import fr.skoupi.extensiveapi.minecraft.utils.ActionBarUtils;
 import lombok.Getter;
@@ -44,6 +45,7 @@ public class EconomyBuffer {
     /**
      * Payout all players the amount they are going to be paid
      */
+    @AsyncOnly
     public void payAll() {
         if (paymentCache.isEmpty() || !plugin.isEnabled())
             return;
