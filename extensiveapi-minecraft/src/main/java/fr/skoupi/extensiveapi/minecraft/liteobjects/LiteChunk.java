@@ -8,6 +8,7 @@ package fr.skoupi.extensiveapi.minecraft.liteobjects;
  */
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.skoupi.extensiveapi.minecraft.ExtensiveCore;
 import io.papermc.lib.PaperLib;
 import lombok.*;
@@ -34,9 +35,14 @@ import java.util.concurrent.CompletableFuture;
  */
 public class LiteChunk {
 
+    @JsonProperty("world_name")
     private String worldName;
 
-    private int chunkX, chunkZ;
+    @JsonProperty("chunk_x")
+    private int chunkX;
+
+    @JsonProperty("chunk_z")
+    private int chunkZ;
 
     public static @NotNull LiteChunk of(@NotNull Chunk chunk) {
         return new LiteChunk(chunk.getWorld().getName(), chunk.getX(), chunk.getZ());

@@ -8,6 +8,7 @@ package fr.skoupi.extensiveapi.minecraft.liteobjects;
  */
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -29,10 +30,16 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LiteLocation {
 
+    @JsonProperty("world_name")
     private String worldName;
 
+    @JsonProperty("x")
     private double x;
+
+    @JsonProperty("y")
     private double y;
+
+    @JsonProperty("z")
     private double z;
 
     public @Nullable Location toBukkitLocation() {

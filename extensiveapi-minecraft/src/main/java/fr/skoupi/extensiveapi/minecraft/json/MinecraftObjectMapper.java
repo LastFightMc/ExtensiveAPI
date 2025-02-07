@@ -11,10 +11,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import fr.skoupi.extensiveapi.minecraft.json.adapters.itemstack.ItemStackDeserializer;
 import fr.skoupi.extensiveapi.minecraft.json.adapters.itemstack.ItemStackSerializer;
+import fr.skoupi.extensiveapi.minecraft.json.adapters.litechunk.LiteChunkDeserializer;
+import fr.skoupi.extensiveapi.minecraft.json.adapters.litechunk.LiteChunkSerializer;
 import fr.skoupi.extensiveapi.minecraft.json.adapters.litelocation.LiteLocationDeserializer;
 import fr.skoupi.extensiveapi.minecraft.json.adapters.litelocation.LiteLocationSerializer;
 import fr.skoupi.extensiveapi.minecraft.json.adapters.location.LocationDeserializer;
 import fr.skoupi.extensiveapi.minecraft.json.adapters.location.LocationSerializer;
+import fr.skoupi.extensiveapi.minecraft.liteobjects.LiteChunk;
 import fr.skoupi.extensiveapi.minecraft.liteobjects.LiteLocation;
 import lombok.Getter;
 import lombok.Setter;
@@ -50,6 +53,9 @@ public class MinecraftObjectMapper {
 		// It's adding a new serializer and deserializer for the ItemStack class.
 		simpleModule.addSerializer(ItemStack.class, new ItemStackSerializer(ItemStack.class));
 		simpleModule.addDeserializer(ItemStack.class, new ItemStackDeserializer());
+
+		simpleModule.addSerializer(LiteChunk.class, new LiteChunkSerializer());
+		simpleModule.addDeserializer(LiteChunk.class, new LiteChunkDeserializer());
 
 		// It's creating a new instance of the ObjectMapper class.
 		this.objectMapper = new ObjectMapper();
